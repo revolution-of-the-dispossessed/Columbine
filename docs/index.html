@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- Add this for better mobile scaling + prevents zoom issues on inputs -->
-  <meta name="apple-mobile-web-app-capable" content="yes"/> <!-- optional retro touch -->
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
 
   <title>The Forgotten Institute - Entrance</title>
 
-  <!-- Fonts: VT323 is great for 90s DOS/terminal vibe; Press Start 2P for pixel titles if you use it -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -16,26 +15,26 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Full-screen background image (entryway) -->
+  <!-- Full-screen background image -->
   <div id="game-container">
     <div id="scene-index" class="scene">
       <!-- Clickable door hotspot -->
       <div class="hotspot door"
            style="left: 45%; top: 30%; width: 18%; height: 55%;"
            onclick="goToNextRoom()"
-           role="button"          <!-- accessibility: screen readers treat as button -->
-           tabindex="0"            <!-- keyboard focusable -->
-           aria-label="Enter through the main door"> <!-- describe action -->
+           role="button"
+           tabindex="0"
+           aria-label="Enter through the main door">
       </div>
     </div>
   </div>
 
-  <!-- Name entry modal (notebook paper popup) -->
+  <!-- Name entry modal -->
   <div id="name-modal" class="modal">
-  <div class="notebook-paper">
+    <div class="notebook-paper">
       <h3 id="modal-title">Littleton Family Dental</h3>
       <p class="date">April 20, 1999</p>
-      
+
       <form id="name-form">
         <p class="note-body">
           This note is to certify that 
@@ -44,22 +43,20 @@
           to have their braces tightened.<br><br>
           Please excuse their absence upon presentation of this note.<br>
         </p>
-        
+
         <p class="signature">
           ___________________________<br>
           Dr. Krayvyn Moranis, DDS
         </p>
-        
+
         <button type="submit" id="submit-name">Put Away</button>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
 
-</div>
-
-  <!-- Message overlay for later clues/dialogue -->
+  <!-- Message overlay -->
   <div id="ui-overlay">
-    <div id="message" role="alert"></div> <!-- role="alert" for screen reader announcement -->
+    <div id="message" role="alert"></div>
   </div>
 
   <script src="script.js"></script>
