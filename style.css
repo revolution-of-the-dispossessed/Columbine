@@ -1,0 +1,324 @@
+/* style.css - 90s Windows/Digital Point & Click Adventure (No Comic Sans edition) */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #000033 url('images/tiled-stars.gif') repeat;  /* or marble, circuit, etc. */
+    color: #00ff00;                                 /* lime green terminal glow */
+    font-family: 'MS Sans Serif', 'Fixedsys', Tahoma, Arial, sans-serif;
+    font-size: 14px;                                /* small & chunky like Win95 dialogs */
+    height: 100vh;
+    overflow: hidden;
+    image-rendering: pixelated;                     /* keeps any pixel art crisp */
+    -webkit-font-smoothing: none;                   /* disable smoothing for sharper text */
+    -moz-osx-font-smoothing: grayscale;             /* Firefox variant */
+}
+
+/* Force pixel-perfect text edges (great for Fixedsys vibe) */
+body, .hotspot, #message, h1, .marquee {
+    image-rendering: pixelated;
+}
+
+/* Main container - fake Win95 window border */
+#game-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background: #000033;
+    border: 4px outset #c0c0c0;                    /* classic 3D Win95 gray border */
+}
+
+/* Scene with tiled Win95-style background option */
+.scene {
+    width: 100%;
+    height: 100%;
+    background: url('images/room-tile-gray.gif') repeat;  /* try Win95 desktop tile or bricks */
+    background-size: auto;
+    position: absolute;
+    top: 0; left: 0;
+    transition: opacity 0.4s;
+}
+
+.scene.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Hotspots - dashed yellow like old image map links */
+.hotspot {
+    position: absolute;
+    cursor: url('images/cursor-hand.gif'), default;   /* or find a Win95 arrow/hand cursor gif */
+    border: 2px dashed #ffff00;
+    background: rgba(255, 255, 0, 0.08);
+    transition: all 0.2s;
+}
+
+.hotspot:hover {
+    border-color: #ff00ff;
+    background: rgba(255, 0, 255, 0.25);
+    box-shadow: 0 0 12px #ff00ff;
+}
+
+.hotspot.door {
+    cursor: url('images/cursor-arrow.gif'), pointer;  /* classic arrow for doors */
+}
+
+/* UI overlay - digital/terminal style */
+#ui-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    font-size: 16px;
+}
+
+#message {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 80%;
+    padding: 12px 24px;
+    background: #000066;
+    border: 3px double #00ffff;
+    color: #ffff00;
+    font-family: 'Fixedsys', 'Courier New', monospace;  /* chunky pixel font for clues */
+    text-align: center;
+    box-shadow: 0 0 20px #00ffff;
+    animation: blink 1.5s infinite alternate;
+    letter-spacing: 1px;  /* slight spacing for retro readability */
+}
+
+@keyframes blink {
+    from { opacity: 0.5; }
+    to   { opacity: 1;   }
+}
+
+#message.show {
+    pointer-events: auto;
+}
+
+/* Marquee - classic scrolling status bar feel */
+.marquee {
+    width: 100%;
+    background: #000080;  /* navy title bar */
+    color: #ffffff;
+    font-family: 'MS Sans Serif', Tahoma, sans-serif;
+    font-size: 18px;
+    padding: 6px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    text-shadow: 1px 1px #000000;
+}
+
+.marquee span {
+    display: inline-block;
+    animation: scroll-left 20s linear infinite;
+}
+
+@keyframes scroll-left {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(-100%); }
+}
+
+/* Blinking elements */
+.blink {
+    animation: blink-text 1.2s step-end infinite;
+}
+
+@keyframes blink-text {
+    50% { opacity: 0; }
+}
+
+/* Inventory - gray Win95 taskbar style */
+#inventory {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 80px;
+    background: #c0c0c0 url('images/tiled-win95-gray.gif') repeat;
+    border-top: 4px outset #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    pointer-events: auto;
+}
+
+.inv-item {
+    width: 64px;
+    height: 64px;
+    background-size: contain;
+    border: 3px outset #ffffff;
+    background-color: #808080;
+}
+
+/* Title screen - Win95 boot-up energy */
+#title-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: #008080 url('images/under-construction-bar.gif') repeat-x top;  /* teal like Win95 */
+}
+
+#title-screen h1 {
+    font-family: 'MS Sans Serif', Tahoma, sans-serif;
+    font-size: 42px;
+    color: #ffffff;
+    background: #000080;  /* navy title bar simulation */
+    width: 100%;
+    padding: 12px 0;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px #000000;
+    border-bottom: 4px solid #c0c0c0;
+}
+
+#title-screen .door-btn {
+    padding: 14px 50px;
+    font-size: 24px;
+    background: #c0c0c0;
+    color: #000000;
+    border: 4px outset #ffffff;
+    border-bottom: 4px outset #808080;
+    border-right: 4px outset #808080;
+    text-decoration: none;
+    margin: 20px;
+    box-shadow: 4px 4px #000000;
+    font-weight: bold;
+}
+
+#title-screen .door-btn:hover {
+    background: #ffff00;
+}
+
+/* Fake hit counter in tiny Fixedsys */
+#hit-counter {
+    position: absolute;
+    bottom: 2%;
+    right: 2%;
+    color: #00ffff;
+    font-size: 12px;
+    font-family: 'Fixedsys', monospace;
+}
+
+/* Modal / Notebook paper popup */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.notebook-paper {
+  width: 90%;
+  max-width: 580px;
+  padding: 40px 50px;
+  background: #f5f5dc url('images/lined-paper-bg.jpg') repeat;  /* or .gif if animated */
+  background-size: auto 30px;  /* adjust line spacing */
+  border: 2px solid #8b4513;
+  box-shadow: 8px 8px 20px rgba(0,0,0,0.6);
+  font-family: 'Courier New', Courier, monospace;
+  color: #000;
+  font-size: 18px;
+  line-height: 1.6;
+  position: relative;
+  border-radius: 4px;
+}
+
+/* Fake blue lines - alternative if no background image */
+.notebook-paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 28px,
+    #add8e6 28px,
+    #add8e6 30px
+  );
+  pointer-events: none;
+  border-radius: 4px;
+}
+
+.notebook-paper h2 {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #8b0000;
+  text-shadow: 1px 1px #fff;
+}
+
+.date {
+  text-align: right;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin: 20px 0 8px;
+  font-weight: bold;
+}
+
+#player-name {
+  width: 100%;
+  padding: 10px;
+  font-size: 20px;
+  font-family: 'Courier New', monospace;
+  border: 2px solid #000;
+  background: #fff8dc;
+}
+
+.note-body {
+  margin: 20px 0;
+  text-align: justify;
+}
+
+.signature {
+  text-align: right;
+  margin-top: 40px;
+  font-style: italic;
+}
+
+#submit-name {
+  display: block;
+  margin: 30px auto 0;
+  padding: 12px 40px;
+  font-size: 20px;
+  background: #000080;
+  color: #fff;
+  border: 3px outset #c0c0c0;
+  cursor: pointer;
+}
+
+#submit-name:hover {
+  background: #0000cd;
+}
+
+/* Door hotspot - 90s style */
+.hotspot.door {
+  cursor: url('images/cursor-arrow.gif'), pointer;  /* or default hand */
+  border: 2px dashed #ffff00;
+}
+
+.hotspot.door:hover {
+  border-color: #ff00ff;
+  background: rgba(255,0,255,0.15);
+}
+
+/* Make scene background cover full area */
+#scene-index {
+  background: url('images/entryway.jpg') center/cover no-repeat;
+}
