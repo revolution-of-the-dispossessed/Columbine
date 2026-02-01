@@ -16,7 +16,7 @@ window.addEventListener('load', () => {
   } else {
     // Optional greet — but only if message element exists
     if (messageEl) {
-      showMessage(`Welcome back, ${playerName}... the door awaits.`);
+      showMessage(`Welcome back, ${playerName}!`);
     }
   }
 });
@@ -31,9 +31,9 @@ if (nameForm) {
       playerName = input;
       localStorage.setItem('playerName', playerName);
       if (nameModal) nameModal.style.display = 'none';
-      showMessage(`Welcome, ${playerName}. The Institute has been expecting you since 4/20/1999...`);
+      showMessage(`Welcome, ${playerName}. The campus is eerily quiet. You can't quite shake the feeling like something is off...`);
     } else {
-      alert("The dentist requires a name."); // Or replace with nicer in-page error
+      alert("You require identification."); // Or replace with nicer in-page error
     }
   });
 } else {
@@ -45,7 +45,7 @@ if (nameForm) {
         playerName = input;
         localStorage.setItem('playerName', playerName);
         if (nameModal) nameModal.style.display = 'none';
-        showMessage(`Welcome, ${playerName}. The Institute has been expecting you since 4/20/1999...`);
+        showMessage(`Welcome, ${playerName}. The campus is eerily quiet. You can't quite shake the feeling like something is off...`);
       } else {
         alert("The dentist requires a name.");
       }
@@ -66,11 +66,11 @@ function showMessage(text) {
 // Door navigation
 function goToNextRoom() {
   if (!playerName) {
-    showMessage("The door won't budge... maybe you need to sign in first?");
+    showMessage("The door won't budge... maybe it's locked from the inside?");
     return;
   }
 
-  showMessage(`Alright ${playerName}, let's see what's inside...`);
+  showMessage("It looks like there are people inside, but they aren't moving.);
 
   // Decide navigation style:
   // Option A: Multi-page game (recommended for simplicity right now)
