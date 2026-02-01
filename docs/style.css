@@ -1,83 +1,446 @@
-/* Name entry modal - lined notebook paper */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+/* ============================================
+   MYSTERY ADVENTURE — 90s EARLY INTERNET STYLE
+   ============================================ */
+
+:root {
+  --win-bg:          #c0c0c0;
+  --win-face:        #c0c0c0;
+  --win-highlight:   #ffffff;
+  --win-shadow:      #808080;
+  --win-dark:        #000000;
+  --win-title-bg:    #000080;
+  --win-title-text:  #ffffff;
+  --win-title-btn:   #c0c0c0;
+  --link-blue:       #0000ff;
+  --link-visited:    #800080;
+  --link-hover:      #ff0000;
+  --text-dark:       #000000;
+  --text-field-bg:   #ffffff;
+  --hint-text-color: #ffff00;
+  --neon-green:      #00ff41;
+  --zone-glow:       #00ffff;
 }
 
-.notebook-paper {
-    width: 90%;
-    max-width: 600px;
-    padding: 40px 50px;
-    background: #f5f5dc;
-    background-image: repeating-linear-gradient(
-        to bottom,
-        transparent 0,
-        transparent 28px,
-        #add8e6 28px,
-        #add8e6 30px
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Verdana', 'MS Sans Serif', 'Arial', sans-serif;
+  font-size: 12px;
+  color: var(--text-dark);
+  background-color: #000010;
+  /* Tiled starfield — tiny repeating pattern */
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAABLbSncAAAAF0lEQVQIW2NgYPj/n4EBBBgZGRkYGRoBAACjBQoLbcnwAAAAAElFTkSuQmCC");
+  background-repeat: repeat;
+  user-select: none;
+}
+
+/* ============================================
+   HINT BAR  — marquee-style scrolling text
+   ============================================ */
+
+#hint-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 28px;
+  background: #000080;
+  border-bottom: 2px solid var(--win-shadow);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  /* Textured title-bar style dots */
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 3px,
+      rgba(255,255,255,0.12) 3px, rgba(255,255,255,0.12) 4px
     );
-    background-size: auto 30px;
-    border: 4px ridge #8b4513;
-    box-shadow: 10px 10px 30px rgba(0,0,0,0.7);
-    font-family: 'Courier New', Courier, monospace;
-    color: #000;
-    font-size: 18px;
-    line-height: 1.6;
-    position: relative;
-    border-radius: 4px;
-    clip-path: polygon(0 0, 96% 0, 100% 6%, 100% 94%, 94% 100%, 0 100%);
+  background-color: #000080;
 }
 
-/* Input inside paragraph (inline) */
-#player-name {
-    display: inline-block;     /* allows it to sit inside text */
-    width: 180px;              /* adjust width to fit text flow */
-    margin: 0 4px;             /* small spacing around input */
-    font-size: 1.1rem;
-    font-family: 'Courier New', monospace;
-    padding: 2px 4px;
-    border: 2px dashed #000;
-    background: #fffdf5;       /* same as notebook background */
-    outline: none;
+#hint-marquee {
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+  color: var(--hint-text-color);
+  font-family: 'Courier New', 'Courier', monospace;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  padding-left: 100vw;
+  text-shadow: 1px 1px 0 #000;
 }
 
-#player-name:focus {
-    outline: 3px dotted #00ff00;
-    box-shadow: 0 0 12px lime;
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
 }
 
-/* Paragraph inside modal */
-.note-body {
-    margin: 24px 0;
-    text-align: justify;
+/* ============================================
+   GAME VIEWPORT
+   ============================================ */
+
+#game-viewport {
+  position: fixed;
+  top: 28px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 
-/* Signature styling */
-.signature {
-    text-align: right;
-    margin-top: 48px;
-    font-style: italic;
+.room {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s steps(4);
 }
 
-/* Submit / "OK" button */
-#submit-name {
-    display: block;
-    margin: 36px auto 0;
-    padding: 14px 48px;
-    font-size: 1.4rem;
-    background: #000080;
-    color: white;
-    border: 4px outset #c0c0c0;
-    cursor: pointer;
-    font-weight: bold;
+.room.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-#submit-name:hover {
-    background: #0000cd;
-    border-color: #ffffff;
+/* Fallback grid when no background image is set */
+.room:not([style*="background-image"]) {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent, transparent 39px,
+      #1a1a2e 39px, #1a1a2e 40px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent, transparent 39px,
+      #1a1a2e 39px, #1a1a2e 40px
+    ),
+    #0d0d1a;
 }
+
+/* ============================================
+   CLICKABLE ZONES — marching ants border
+   ============================================ */
+
+.click-zone {
+  position: absolute;
+  background: rgba(0, 255, 255, 0.06);
+  border: 2px dashed var(--zone-glow);
+  cursor: pointer;
+  transition: background 0.15s;
+  animation: marchingAnts 1s linear infinite;
+}
+
+@keyframes marchingAnts {
+  0%   { border-color: var(--zone-glow); }
+  50%  { border-color: rgba(0, 255, 255, 0.25); }
+  100% { border-color: var(--zone-glow); }
+}
+
+.click-zone:hover {
+  background: rgba(0, 255, 255, 0.22);
+  box-shadow:
+    0 0 12px rgba(0, 255, 255, 0.5),
+    inset 0 0 8px rgba(0, 255, 255, 0.15);
+}
+
+/* Tooltip label on hover */
+.click-zone .zone-label {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--neon-green);
+  background: #000;
+  border: 1px solid var(--neon-green);
+  padding: 1px 5px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s;
+  text-shadow: 0 0 4px var(--neon-green);
+}
+
+.click-zone:hover .zone-label {
+  opacity: 1;
+}
+
+/* ============================================
+   POPUP — Windows 95/98 dialog box
+   ============================================ */
+
+#popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+#popup-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Outer window — raised 3D bevel */
+#popup {
+  background: var(--win-face);
+  border: 2px solid;
+  border-color: var(--win-highlight) var(--win-dark) var(--win-dark) var(--win-highlight);
+  box-shadow: 2px 2px 0 var(--win-shadow), -1px -1px 0 var(--win-shadow);
+  width: 420px;
+  max-width: 90vw;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title bar */
+#popup-titlebar {
+  background-color: var(--win-title-bg);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 3px,
+      rgba(255,255,255,0.15) 3px, rgba(255,255,255,0.15) 4px
+    );
+  color: var(--win-title-text);
+  font-family: 'Verdana', sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 3px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+#popup-titlebar .title-text {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 1;
+}
+
+#popup-titlebar .title-icon {
+  font-size: 14px;
+}
+
+/* Close [X] button */
+#popup-close {
+  background: var(--win-title-btn);
+  border: 2px solid;
+  border-color: var(--win-highlight) var(--win-dark) var(--win-dark) var(--win-highlight);
+  width: 16px;
+  height: 14px;
+  font-size: 10px;
+  font-family: 'Verdana', sans-serif;
+  font-weight: bold;
+  color: var(--text-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+#popup-close:active {
+  border-color: var(--win-dark) var(--win-highlight) var(--win-highlight) var(--win-dark);
+}
+
+/* Inner content — sunken inset bevel */
+#popup-content {
+  border: 2px solid;
+  border-color: var(--win-shadow) var(--win-highlight) var(--win-highlight) var(--win-shadow);
+  margin: 6px;
+  padding: 12px;
+  background: var(--text-field-bg);
+  overflow-y: auto;
+  flex-grow: 1;
+  max-height: 300px;
+}
+
+#popup-title {
+  font-family: 'Verdana', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--win-title-bg);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #a0a0a0;
+}
+
+#popup-body {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-dark);
+}
+
+#popup-image {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border: 2px solid;
+  border-color: var(--win-shadow) var(--win-highlight) var(--win-highlight) var(--win-shadow);
+  margin-bottom: 10px;
+  display: none;
+  background: #e0e0e0;
+}
+
+/* Button row at bottom of popup */
+#popup-buttons {
+  padding: 6px 6px 8px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.popup-btn {
+  background: var(--win-face);
+  border: 2px solid;
+  border-color: var(--win-highlight) var(--win-dark) var(--win-dark) var(--win-highlight);
+  box-shadow: 1px 1px 0 var(--win-shadow);
+  padding: 3px 16px;
+  font-family: 'Verdana', sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--text-dark);
+  cursor: pointer;
+  min-width: 75px;
+  text-align: center;
+}
+
+.popup-btn:active {
+  border-color: var(--win-dark) var(--win-highlight) var(--win-highlight) var(--win-dark);
+  box-shadow: none;
+  padding: 4px 15px 2px 17px;
+}
+
+.popup-btn:focus {
+  outline: 1px dotted #000;
+  outline-offset: -3px;
+}
+
+/* ============================================
+   LOADING SCREEN
+   ============================================ */
+
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background-color: #000010;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAABLbSncAAAAF0lEQVQIW2NgYPj/n4EBBBgZGRkYGRoBAACjBQoLbcnwAAAAAElFTkSuQmCC");
+  background-repeat: repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  opacity: 1;
+  transition: opacity 0.3s;
+  pointer-events: auto;
+}
+
+#loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#loading-screen .loading-text {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: var(--neon-green);
+  text-shadow: 0 0 6px var(--neon-green);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.blink {
+  display: inline-block;
+  animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* Segmented progress bar */
+#loading-bar-track {
+  width: 200px;
+  height: 18px;
+  border: 2px solid;
+  border-color: var(--win-shadow) var(--win-highlight) var(--win-highlight) var(--win-shadow);
+  background: #000;
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+}
+
+.loading-block {
+  width: 16px;
+  height: 100%;
+  background: var(--neon-green);
+  box-shadow: 0 0 4px var(--neon-green);
+  opacity: 0;
+  animation: fillBlocks 0.5s steps(1) forwards;
+}
+
+.loading-block:nth-child(1)  { animation-delay: 0.00s; }
+.loading-block:nth-child(2)  { animation-delay: 0.05s; }
+.loading-block:nth-child(3)  { animation-delay: 0.10s; }
+.loading-block:nth-child(4)  { animation-delay: 0.15s; }
+.loading-block:nth-child(5)  { animation-delay: 0.20s; }
+.loading-block:nth-child(6)  { animation-delay: 0.25s; }
+.loading-block:nth-child(7)  { animation-delay: 0.30s; }
+.loading-block:nth-child(8)  { animation-delay: 0.35s; }
+.loading-block:nth-child(9)  { animation-delay: 0.40s; }
+.loading-block:nth-child(10) { animation-delay: 0.45s; }
+
+@keyframes fillBlocks {
+  to { opacity: 1; }
+}
+
+/* ============================================
+   SCROLLBAR — classic narrow Win95 style
+   ============================================ */
+
+::-webkit-scrollbar              { width: 15px; }
+::-webkit-scrollbar-track        {
+  background: var(--win-face);
+  border-left: 1px solid var(--win-shadow);
+  border-right: 1px solid var(--win-highlight);
+}
+::-webkit-scrollbar-thumb        {
+  background: var(--win-face);
+  border: 2px solid;
+  border-color: var(--win-highlight) var(--win-dark) var(--win-dark) var(--win-highlight);
+  min-height: 24px;
+}
+::-webkit-scrollbar-thumb:active { background: #b0b0b0; }
