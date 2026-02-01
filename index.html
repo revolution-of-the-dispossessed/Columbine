@@ -3,51 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- Add this for better mobile scaling + prevents zoom issues on inputs -->
+  <meta name="apple-mobile-web-app-capable" content="yes"/> <!-- optional retro touch -->
+
   <title>The Forgotten Institute - Entrance</title>
-  <link rel="stylesheet" href="style.css"/>
-  <!-- Optional Google font for more 90s digital feel -->
+
+  <!-- Fonts: VT323 is great for 90s DOS/terminal vibe; Press Start 2P for pixel titles if you use it -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-
   <!-- Full-screen background image (entryway) -->
   <div id="game-container">
     <div id="scene-index" class="scene">
       <!-- Clickable door hotspot -->
-      <div class="hotspot door" 
+      <div class="hotspot door"
            style="left: 45%; top: 30%; width: 18%; height: 55%;"
-           onclick="goToNextRoom()"></div>
+           onclick="goToNextRoom()"
+           role="button"          <!-- accessibility: screen readers treat as button -->
+           tabindex="0"            <!-- keyboard focusable -->
+           aria-label="Enter through the main door"> <!-- describe action -->
+      </div>
     </div>
   </div>
 
   <!-- Name entry modal (notebook paper popup) -->
-  <div id="name-modal" class="modal">
+  <div id="name-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="notebook-paper">
-      <h2>Excuse from Dr. M. Filling</h2>
+      <h2 id="modal-title">Excuse from Dr. M. Filling</h2> <!-- id for aria -->
       <p class="date">April 20, 1999</p>
       
-      <label for="player-name">Patient Name:</label>
-      <input type="text" id="player-name" placeholder="Enter your name..." autocomplete="off"/>
-      
-      <p class="note-body">
-        This is to certify that the above-named patient was seen in my office on this date<br>
-        for emergency dental treatment and is excused from school/work until recovered.<br><br>
-        Please admit to the Institute upon presentation of this note.<br>
-        No questions will be asked.
-      </p>
-      
-      <p class="signature">
-        ___________________________<br>
-        Dr. Marvin Filling, DDS
-      </p>
-      
-      <button id="submit-name">Enter the Institute</button>
+      <form id="name-form"> <!-- wrap in form for better semantics/submit on Enter -->
+        <label for="player-name">Patient Name:</label>
+        <input type="text" id="player-name" placeholder="Enter your name..." autocomplete="off" required autofocus/>
+        
+        <p class="note-body">
+          This is to certify that the above-named patient was seen in my office on this date<br>
+          for emergency dental treatment and is excused from school/work until recovered.<br><br>
+          Please admit to the Institute upon presentation of this note.<br>
+          No questions will be asked.
+        </p>
+        
+        <p class="signature">
+          ___________________________<br>
+          Dr. Marvin Filling, DDS
+        </p>
+        
+        <button type="submit" id="submit-name">Enter the Institute</button>
+      </form>
     </div>
   </div>
 
   <!-- Message overlay for later clues/dialogue -->
   <div id="ui-overlay">
-    <div id="message"></div>
+    <div id="message" role="alert"></div> <!-- role="alert" for screen reader announcement -->
   </div>
 
   <script src="script.js"></script>
