@@ -1,53 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Columbine High School</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-
-  <!-- HINT BAR (marquee) -->
-  <div id="hint-bar">
-    <span id="hint-marquee">Loading...</span>
-  </div>
-
-  <!-- GAME VIEWPORT -->
+<div id="game-container">
   <div id="game-viewport">
-    <div class="room active" id="entrance"
-         style="background-image: url('img/entrance.jpg')"></div>
-    <div class="room" id="hallway"
-         style="background-image: url('img/hallway.jpg')"></div>
-    <div class="room" id="library"
-         style="background-image: url('img/library.jpg')"></div>
-  </div>
 
-  <!-- POPUP (Win95 dialog) -->
-  <div id="popup-overlay">
-    <div id="popup">
-      <div id="popup-titlebar">
-        <div class="title-text">
-          <span class="title-icon">&#128269;</span>
-          <span id="popup-window-title">Examine</span>
-        </div>
-        <button id="popup-close">&#x2715;</button>
-      </div>
-      <div id="popup-content">
-        <div id="popup-title"></div>
-        <img id="popup-image" alt="Item" />
-        <div id="popup-body"></div>
-      </div>
-      <div id="popup-buttons"></div>
+    <div id="loading-screen" class="hidden">
+      <div id="loading-bar-track"></div>
+    </div>
+
+    <div class="room active" id="entrance" style="background-image:url('entrance.jpg')"></div>
+    <div class="room" id="hallway" style="background-image:url('hallway.jpg')"></div>
+    <div class="room" id="library" style="background-image:url('library.jpg')"></div>
+
+    <div id="hint-bar">
+      <div id="hint-marquee"></div>
     </div>
   </div>
+</div>
 
-  <!-- LOADING SCREEN -->
-  <div id="loading-screen">
-    <span class="loading-text">Loading<span class="blink">_</span></span>
-    <div id="loading-bar-track"></div>
+<div id="popup-overlay">
+  <div id="popup">
+    <div id="popup-header">
+      <span id="popup-title"></span>
+      <button id="popup-close">X</button>
+    </div>
+    <div id="popup-body"></div>
+    <img id="popup-image" />
+    <div id="popup-buttons"></div>
   </div>
-
-  <script src="main.js"></script>
-</body>
-</html>
+</div>
